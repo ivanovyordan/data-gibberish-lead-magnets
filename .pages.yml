@@ -42,3 +42,17 @@ content:
       - name: metaDescription
         label: Meta Description
         type: string
+
+  - name: tracking
+    label: Tracking Settings
+    type: file
+    path: content/settings/tracking.json
+    fields:
+      - name: ga4MeasurementId
+        label: Google Analytics 4 Measurement ID
+        type: string
+        description: "e.g. G-XXXXXXXXXX"
+      - name: metaPixelId
+        label: Meta (Facebook) Pixel ID
+        type: string
+        description: "e.g. 1234567890"
