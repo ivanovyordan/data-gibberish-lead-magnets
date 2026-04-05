@@ -1,0 +1,36 @@
+---
+import "../styles/global.css";
+import { getCollection } from "astro:content";
+
+const pages = await getCollection("landing-pages");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
+    <title>Landing Pages</title>
+  </head>
+  <body class="min-h-screen bg-white text-gray-900 p-8 md:p-16">
+    <main class="max-w-2xl mx-auto">
+      <h1 class="text-3xl font-bold mb-8">Landing Pages</h1>
+      <ul class="space-y-4" role="list">
+        {pages.map((page) => (
+          <li>
+            <a
+              href={`/${page.data.slug}/`}
+              class="block p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition"
+            >
+              <h2 class="text-xl font-semibold mb-1">{page.data.title}</h2>
+              {page.data.subtitle && (
+                <p class="text-gray-700">{page.data.subtitle}</p>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </main>
+  </body>
+</html>

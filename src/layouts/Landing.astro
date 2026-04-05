@@ -1,0 +1,180 @@
+---
+import "../styles/global.css";
+import { tracking } from "../config";
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  heroImage?: string;
+  heroImageAlt?: string;
+  benefits?: string[];
+  formEmbed: string;
+  ogImage?: string;
+  metaDescription?: string;
+}
+
+const {
+  title,
+  subtitle,
+  heroImage,
+  heroImageAlt,
+  benefits,
+  formEmbed,
+  ogImage,
+  metaDescription,
+} = Astro.props;
+
+const hasImage = !!heroImage;
+const ga4Id = tracking.ga4MeasurementId;
+const pixelId = tracking.metaPixelId;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
+    <title>{title}</title>
+    {metaDescription && <meta name="description" content={metaDescription} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:title" content={title} />
+    {metaDescription && <meta property="og:description" content={metaDescription} />}
+
+    {/* GA4 */}
+    {ga4Id && (
+      <>
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}
+        ></script>
+        <script is:inline define:vars={{ ga4Id }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag("js", new Date());
+          gtag("config", ga4Id);
+        </script>
+      </>
+    )}
+
+    {/* Meta Pixel */}
+    {pixelId && (
+      <script is:inline define:vars={{ pixelId }}>
+        !(function (f, b, e, v, n, t, s) {
+          if (f.fbq) return;
+          n = f.fbq = function () {
+            n.callMethod
+              ? n.callMethod.apply(n, arguments)
+              : n.queue.push(arguments);
+          };
+          if (!f._fbq) f._fbq = n;
+          n.push = n;
+          n.loaded = !0;
+          n.version = "2.0";
+          n.queue = [];
+          t = b.createElement(e);
+          t.async = !0;
+          t.src = v;
+          s = b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t, s);
+        })(
+          window,
+          document,
+          "script",
+          "https://connect.facebook.net/en_US/fbevents.js"
+        );
+        fbq("init", pixelId);
+        fbq("track", "PageView");
+      </script>
+    )}
+  </head>
+  <body class="min-h-screen bg-white text-gray-900">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded focus:shadow">Skip to main content</a>
+    <main id="main-content">
+    {
+      hasImage ? (
+        /* Mode 1: Split — image left, copy+form right */
+        <div class="min-h-screen flex flex-col md:flex-row">
+          <div class="md:w-[55%] w-full bg-gray-50 flex items-center justify-center p-8 md:p-12">
+            <img
+              src={heroImage}
+              alt={heroImageAlt || title}
+              class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-lg"
+            />
+          </div>
+          <article class="md:w-[45%] w-full flex flex-col justify-center p-8 md:p-12 lg:p-16">
+            <div class="mb-8">
+              <h1 class="text-3xl md:text-4xl font-bold mb-4">{title}</h1>
+              {subtitle && (
+                <p class="text-lg text-gray-700 mb-6">{subtitle}</p>
+              )}
+              <div class="prose prose-gray mb-6">
+                <slot />
+              </div>
+              {benefits && benefits.length > 0 && (
+                <ul class="space-y-3" role="list" aria-label="Benefits">
+                  {benefits.map((b) => (
+                    <li class="flex items-start gap-2">
+                      <span class="font-bold mt-0.5" style="color: #1e2939;" aria-hidden="true">&#10003;</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <section aria-label="Sign up form"
+              class="bg-gray-50 rounded-xl p-6 form-container"
+              set:html={formEmbed}
+            />
+          </article>
+        </div>
+      ) : (
+        /* Mode 2: Centered — copy + form stacked */
+        <div class="min-h-screen flex items-center justify-center p-8">
+          <article class="max-w-lg w-full">
+            <div class="text-center mb-8">
+              <h1 class="text-3xl md:text-4xl font-bold mb-4">{title}</h1>
+              {subtitle && (
+                <p class="text-lg text-gray-700 mb-6">{subtitle}</p>
+              )}
+              <div class="prose prose-gray mb-6 mx-auto">
+                <slot />
+              </div>
+              {benefits && benefits.length > 0 && (
+                <ul class="space-y-3 text-left max-w-sm mx-auto" role="list" aria-label="Benefits">
+                  {benefits.map((b) => (
+                    <li class="flex items-start gap-2">
+                      <span class="font-bold mt-0.5" style="color: #1e2939;" aria-hidden="true">&#10003;</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <section aria-label="Sign up form"
+              class="bg-gray-50 rounded-xl p-6 form-container"
+              set:html={formEmbed}
+            />
+          </article>
+        </div>
+      )
+    }
+    </main>
+
+    {/* Conversion tracking on form submit */}
+    <script is:inline define:vars={{ ga4Id, pixelId }}>
+      document.addEventListener("submit", function (e) {
+        var form = e.target.closest(".form-container form");
+        if (!form) return;
+        if (ga4Id && typeof gtag === "function") {
+          gtag("event", "generate_lead", { event_category: "engagement" });
+        }
+        if (pixelId && typeof fbq === "function") {
+          fbq("track", "Lead");
+        }
+      });
+    </script>
+  </body>
+</html>

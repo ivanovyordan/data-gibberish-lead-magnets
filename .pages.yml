@@ -1,0 +1,44 @@
+media:
+  input: public/media
+  output: /media
+
+content:
+  - name: landing-pages
+    label: Landing Pages
+    type: collection
+    path: content/landing-pages
+    filename: "{fields.slug}.md"
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: subtitle
+        label: Subtitle
+        type: string
+      - name: slug
+        label: URL Slug
+        type: string
+        required: true
+      - name: heroImage
+        label: Hero Image
+        type: image
+      - name: heroImageAlt
+        label: Hero Image Alt Text
+        type: string
+      - name: benefits
+        label: Benefits
+        type: string
+        list: true
+      - name: formEmbed
+        label: SendFox Form Embed
+        type: rich-text
+        required: true
+        options:
+          format: html
+      - name: ogImage
+        label: OG Image
+        type: image
+      - name: metaDescription
+        label: Meta Description
+        type: string

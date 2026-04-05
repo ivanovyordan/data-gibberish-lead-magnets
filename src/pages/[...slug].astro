@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from "astro:content";
+import Landing from "../layouts/Landing.astro";
+
+export async function getStaticPaths() {
+  const pages = await getCollection("landing-pages");
+  return pages.map((page) => ({
+    params: { slug: page.data.slug },
+    props: page,
+  }));
+}
+
+const page = Astro.props;
+const { title, subtitle, heroImage, heroImageAlt, benefits, formEmbed, ogImage, metaDescription } = page.data;
+const { Content } = await render(page);
+---
+
+<Landing
+  title={title}
+  subtitle={subtitle}
+  heroImage={heroImage}
+  heroImageAlt={heroImageAlt}
+  benefits={benefits}
+  formEmbed={formEmbed}
+  ogImage={ogImage}
+  metaDescription={metaDescription}
+>
+  <Content />
+</Landing>
