@@ -8,8 +8,9 @@ interface Props {
   heroImage?: string;
   heroImageAlt?: string;
   benefits?: string[];
-  formEmbed: string;
-  ogImage?: string;
+  sendfoxFormId: string;
+  formButtonLabel?: string;
+
   metaDescription?: string;
 }
 
@@ -19,12 +20,14 @@ const {
   heroImage,
   heroImageAlt,
   benefits,
-  formEmbed,
-  ogImage,
+  sendfoxFormId,
+  formButtonLabel = "Submit",
+
   metaDescription,
 } = Astro.props;
 
 const hasImage = !!heroImage;
+const formShortId = sendfoxFormId.split("/").pop();
 const ga4Id = tracking.ga4MeasurementId;
 const pixelId = tracking.metaPixelId;
 ---
@@ -37,7 +40,7 @@ const pixelId = tracking.metaPixelId;
     <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
     <title>{title}</title>
     {metaDescription && <meta name="description" content={metaDescription} />}
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    {heroImage && <meta property="og:image" content={heroImage} />}
     <meta property="og:title" content={title} />
     {metaDescription && <meta property="og:description" content={metaDescription} />}
 
@@ -124,10 +127,14 @@ const pixelId = tracking.metaPixelId;
                 </ul>
               )}
             </div>
-            <section aria-label="Sign up form"
-              class="bg-gray-50 rounded-xl p-6 form-container"
-              set:html={formEmbed}
-            />
+            <section aria-label="Sign up form" class="bg-gray-50 rounded-xl p-6 form-container">
+              <form method="post" action={`https://sendfox.com/form/${sendfoxFormId}`} class="sendfox-form" id={formShortId} data-async="true" data-recaptcha="false">
+                <p><label for="sendfox_form_email">Email: </label><input type="email" id="sendfox_form_email" placeholder="Email" name="email" required /></p>
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="a_password" tabindex="-1" value="" autocomplete="off" /></div>
+                <p><button type="submit">{formButtonLabel}</button></p>
+              </form>
+              <script src="https://cdn.sendfox.com/js/form.js" charset="utf-8"></script>
+            </section>
           </article>
         </div>
       ) : (
@@ -153,10 +160,14 @@ const pixelId = tracking.metaPixelId;
                 </ul>
               )}
             </div>
-            <section aria-label="Sign up form"
-              class="bg-gray-50 rounded-xl p-6 form-container"
-              set:html={formEmbed}
-            />
+            <section aria-label="Sign up form" class="bg-gray-50 rounded-xl p-6 form-container">
+              <form method="post" action={`https://sendfox.com/form/${sendfoxFormId}`} class="sendfox-form" id={formShortId} data-async="true" data-recaptcha="false">
+                <p><label for="sendfox_form_email">Email: </label><input type="email" id="sendfox_form_email" placeholder="Email" name="email" required /></p>
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="a_password" tabindex="-1" value="" autocomplete="off" /></div>
+                <p><button type="submit">{formButtonLabel}</button></p>
+              </form>
+              <script src="https://cdn.sendfox.com/js/form.js" charset="utf-8"></script>
+            </section>
           </article>
         </div>
       )

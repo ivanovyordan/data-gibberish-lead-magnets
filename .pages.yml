@@ -30,15 +30,16 @@ content:
         label: Benefits
         type: string
         list: true
-      - name: formEmbed
-        label: SendFox Form Embed
-        type: rich-text
+      - name: sendfoxFormId
+        label: SendFox Form ID
+        type: string
         required: true
-        options:
-          format: html
-      - name: ogImage
-        label: OG Image
-        type: image
+        description: "e.g. m5xz6n/3oe0d9"
+      - name: formButtonLabel
+        label: Form Button Label
+        type: string
+        description: "Defaults to Submit"
+
       - name: metaDescription
         label: Meta Description
         type: string

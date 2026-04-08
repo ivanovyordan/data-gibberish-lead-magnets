@@ -10,8 +10,9 @@ const landingPages = defineCollection({
     heroImage: z.string().optional(),
     heroImageAlt: z.string().optional(),
     benefits: z.array(z.string()).optional(),
-    formEmbed: z.string(),
-    ogImage: z.string().optional(),
+    sendfoxFormId: z.string(),
+    formButtonLabel: z.string().default("Submit"),
+
     metaDescription: z.string().optional(),
   }),
 });
