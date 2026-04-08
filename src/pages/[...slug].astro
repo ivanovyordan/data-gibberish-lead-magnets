@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 }
 
 const page = Astro.props;
-const { title, subtitle, heroImage, heroImageAlt, benefits, formEmbed, ogImage, metaDescription } = page.data;
+const { title, subtitle, heroImage, heroImageAlt, benefits, sendfoxFormId, formButtonLabel, metaDescription } = page.data;
 const { Content } = await render(page);
 ---
 
@@ -21,8 +21,8 @@ const { Content } = await render(page);
   heroImage={heroImage}
   heroImageAlt={heroImageAlt}
   benefits={benefits}
-  formEmbed={formEmbed}
-  ogImage={ogImage}
+  sendfoxFormId={sendfoxFormId}
+  formButtonLabel={formButtonLabel}
   metaDescription={metaDescription}
 >
   <Content />
